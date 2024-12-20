@@ -15,7 +15,7 @@ export default function Login() {
     setFeedback(null);
   
     try {
-      const result = await fetch("http://localhost:8080/api/v1/users", {
+      const result = await fetch("http://localhost:8080/api/v1/users/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json;charset=UTF-8",
@@ -24,8 +24,10 @@ export default function Login() {
       });
   
       if (result.ok) {
-
-        window.location.href = "/homePage";
+        setTimeout(() => {
+          window.location.href = "/homePage";
+        }, 1500);
+        
       } else {
         const errorData = await result.json();
         setFeedback(errorData.message || "Login failed.");
@@ -68,8 +70,8 @@ export default function Login() {
           type="text"
           name="username"
           value={credentials.username}
-          onChange={handleChange}
-          required
+          onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
+          placeholder="Username"
         />
 
         {/* Password Field */}
@@ -82,8 +84,8 @@ export default function Login() {
           type="password"
           name="password"
           value={credentials.password}
-          onChange={handleChange}
-          required
+          onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+          placeholder="Password"
         />
 
         {/* Feedback Message */}

@@ -52,7 +52,7 @@ export default function HomePage() {
         {/* Add New Book Form */}
         <form
           onSubmit={handleAddBook}
-          className="flex gap-4 mb-6 items-center bg-gray-800 p-4 rounded"
+          className="flex gap-4 flex-col mb-6 items-center bg-gray-800 p-4 rounded"
         >
           <input
             type="text"
@@ -85,7 +85,7 @@ export default function HomePage() {
 
         {/* Book List */}
         <section>
-          <h2 className="text-xl mb-4">Books</h2>
+          <h2 className="flex text-xl mb-4 justify-center">Books</h2>
           {books.length > 0 ? (
             <ul className="space-y-2">
               {books.map((book) => (
@@ -101,7 +101,7 @@ export default function HomePage() {
               ))}
             </ul>
           ) : (
-            <p>No books added yet. Start by adding a new book!</p>
+            <p className="flex justify-center">No books added yet. Start by adding a new book!</p>
           )}
         </section>
       </main>

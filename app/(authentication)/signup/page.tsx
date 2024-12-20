@@ -44,8 +44,8 @@ export default function SignUp() {
         setFeedback("Signup successful! Redirecting to login...");
         // Redirect to login page after a short delay
         setTimeout(() => {
-          window.location.href = "/login"; // Adjust the path as per your project structure
-        }, 1500);
+          window.location.href = "/login"; 
+        }, 3000);
       } else {
         const resultError = await result.json();
         setFeedback(resultError.message || "Signup failed.");
