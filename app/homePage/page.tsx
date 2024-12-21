@@ -1,14 +1,27 @@
 "use client";
-import { useState } from "react";
-import { Book } from "../_type/iCustomBooks";
+import { useState, useEffect } from "react";
 
-
-
+interface Book {
+  id: number;
+  title: string;
+  author: string;
+}
 
 export default function HomePage() {
   const [books, setBooks] = useState<Book[]>([]);
   const [newBook, setNewBook] = useState({ title: "", author: "" });
   const [feedback, setFeedback] = useState<string | null>(null);
+
+  useEffect(() => {
+    const storedBooks = localStorage.getItem("books");
+    if (storedBooks) {
+      setBooks(JSON.parse(storedBooks));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("books", JSON.stringify(books));
+  }, [books]);
 
   function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
@@ -24,14 +37,15 @@ export default function HomePage() {
     }
 
     const newId = books.length ? books[books.length - 1].id + 1 : 1;
-    setBooks((prev) => [...prev, { id: newId, ...newBook }]);
+    const newBookObject = { id: newId, ...newBook };
+    setBooks((prev) => [...prev, newBookObject]);
     setNewBook({ title: "", author: "" });
     setFeedback(null);
   }
 
-  function handleLogout() {
-
-    window.location.href = "/login";
+  function handleDeleteBook(bookId: number) {
+    const updatedBooks = books.filter((book) => book.id !== bookId);
+    setBooks(updatedBooks);
   }
 
   return (
@@ -40,11 +54,11 @@ export default function HomePage() {
       <header className="p-4 bg-blue-600 flex justify-between items-center">
         <h1 className="text-2xl">Book Tracker</h1>
         <button
-          onClick={handleLogout}
-          className="bg-red-500 px-4 py-2 rounded hover:bg-red-400"
-        >
-          Logout
-        </button>
+    onClick={() => (window.location.href = "/login")}
+    className="bg-red-500 px-4 py-2 rounded hover:bg-red-400"
+  >
+    Logout
+  </button>
       </header>
 
       {/* Main Content */}
@@ -84,7 +98,7 @@ export default function HomePage() {
         {feedback && <p className="text-red-400 mb-4">{feedback}</p>}
 
         {/* Book List */}
-        <section>
+        <section className="max-w-3xl mx-auto">
           <h2 className="flex text-xl mb-4 justify-center">Books</h2>
           {books.length > 0 ? (
             <ul className="space-y-2">
@@ -97,6 +111,12 @@ export default function HomePage() {
                     <h3 className="text-lg">{book.title}</h3>
                     <p className="text-gray-400">by {book.author}</p>
                   </div>
+                  <button
+                    onClick={() => handleDeleteBook(book.id)}
+                    className="bg-red-500 px-4 py-2 rounded hover:bg-red-400"
+                  >
+                    Delete
+                  </button>
                 </li>
               ))}
             </ul>
